@@ -24,7 +24,7 @@ services:
         com.description: "Docker OpenSplice/SAL image rpms"
       args:
         salbase_image : lsstdm/salbase:${IMAGE_TAG}
-        SAL_VERSION : "3.10.0_001-3.10.0.el7"
+        SAL_VERSION : "3.10.0-4.0.0.el7"
         OSPL_VERSION : "6.9.0"
 
   salsrc:
@@ -38,7 +38,7 @@ services:
       args:
         salrpm_image: lsstdm/salrpm:${IMAGE_TAG}
         TS_SAL_VERSION : "v3.10.0"
-        TS_XML_VERSION : "v3.10.0"
+        TS_XML_VERSION : "v4.0.0"
         INSTALL_PATH : "/opt/lsst"
 
   salobj:
@@ -51,7 +51,7 @@ services:
         com.description: "Docker inage for ts_salobj"
       args:
         salsrc_image : lsstdm/salsrc:${IMAGE_TAG}
-        TS_SALOBJ_VERSION : "v4.1.0"
+        TS_SALOBJ_VERSION : "v4.5.0"
         TS_IDL_VERSION: "v0.2.0"
         INSTALL_PATH : "/opt/lsst"
         GIT_LSST_TS: "https://github.com/lsst-ts"
