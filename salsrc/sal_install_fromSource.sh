@@ -103,8 +103,7 @@ cp -pv $LSST_SDK_INSTALL/ts_xml/sal_interfaces/*/*xml $SAL_WORK_DIR
 cd $SAL_WORK_DIR
 
 # Edit CSC as required
-#for device in EFD ATHeaderService ATCamera ATArchiver ATPtg ATMCS ATSpectrograph ATTCS ATHexapod
-for device in ATHeaderService
+for device in EFD ATHeaderService ATCamera ATArchiver ATPtg ATMCS ATSpectrograph ATTCS ATHexapod
 do
     echo "----------------------------------------"
     echo "  Running salgenerator for $device      "
