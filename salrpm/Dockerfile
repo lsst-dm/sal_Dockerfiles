@@ -24,6 +24,7 @@ RUN yum -y install OpenSpliceDDS-$OSPL_VERSION \
     ATMCS-$SAL_VERSION \
     ATSpectrograph-$SAL_VERSION \
     ATTCS-$SAL_VERSION \
+    ATHexapod-$SAL_VERSION \
     # Needed by ATArchiver
     CatchupArchiver-$SAL_VERSION \
     MTArchiver-$SAL_VERSION \
