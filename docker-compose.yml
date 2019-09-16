@@ -1,59 +1,60 @@
+# docker-compose version of this compose file
 version: "3.7"
 
 # To run:
-# export IMAGE_TAG=sal_3.10.0_salobj_4.10
-# docker-compose build salbase
-#  or to build all
-# docker-compose build salbase salrpm salsrc salobj at_headerservice
+# export OSPL_VERSION=6.9.0
+# export LSSTTS_SAL_VERSION=3.10.0
+# export LSSTTS_SALOBJ_VERSION=4.5.0
+# export LSSTTS_XML_VERSION=4.2.0
+# export LSSTTS_IDL_VERSION=0.2.0
 
 services:
-  salbase:
-    image: lsstdm/salbase:${IMAGE_TAG}
+  salrun:
+    image: lsstdm/salrun:${OSPL_VERSION}
     build:
-      context: ./salbase
-      labels:
-        com.description: "LSST DDS/SAL base docker image."
-
-  salrpm:
-    image: lsstdm/salrpm:${IMAGE_TAG}
-    depends_on:
-      - salbase
-    build:
-      context: ./salrpm
-      labels:
-        com.description: "Docker OpenSplice/SAL image rpms"
+      context: ./salrun
       args:
-        salbase_image : lsstdm/salbase:${IMAGE_TAG}
-        SAL_VERSION : "3.10.0-4.0.0.el7"
-        OSPL_VERSION : "6.9.0"
-
-  salsrc:
-    image: lsstdm/salsrc:${IMAGE_TAG}
-    depends_on:
-      - salrpm
-    build:
-      context: ./salsrc
-      labels:
-        com.description: "Docker OpenSplice/SAL image from source"
-      args:
-        salrpm_image: lsstdm/salrpm:${IMAGE_TAG}
-        TS_SAL_VERSION : "v3.10.0"
-        TS_XML_VERSION : "v4.0.0"
-        INSTALL_PATH : "/opt/lsst"
+        - OSPL_VERSION
 
   salobj:
-    image: lsstdm/salobj:${IMAGE_TAG}
-    depends_on:
-      - salsrc
+    image: lsstdm/salobj:${LSSTTS_SALOBJ_VERSION}
     build:
       context: ./salobj
-      labels:
-        com.description: "Docker inage for ts_salobj"
       args:
-        salsrc_image : lsstdm/salsrc:${IMAGE_TAG}
-        TS_SALOBJ_VERSION : "v4.5.0"
-        TS_IDL_VERSION: "v0.2.0"
-        INSTALL_PATH : "/opt/lsst"
-        GIT_LSST_TS: "https://github.com/lsst-ts"
-        REPOS_TMP: "/tmp/repos"
+        - OSPL_VERSION
+        - LSSTTS_SALOBJ_VERSION
+    depends_on:
+      - salrun
 
+  salidl:
+    image: lsstdm/salidl:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}
+    build:
+      context: ./salidl
+      args:
+        - OSPL_VERSION
+        - LSSTTS_SALOBJ_VERSION
+        - LSSTTS_IDL_VERSION
+        - LSSTTS_SAL_VERSION
+        - LSSTTS_XML_VERSION
+    depends_on:
+      - salobj
+
+  atarchiver:
+    image: lsstdm/atarchiver:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}
+    build:
+      context: ./atarchiver
+      args:
+        - LSSTTS_SAL_VERSION
+        - LSSTTS_XML_VERSION
+    depends_on:
+      - salidl
+
+  atheaderservice:
+    image: lsstdm/atheaderservice:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}
+    build:
+      context: ./atheaderservice
+      args:
+        - LSSTTS_SAL_VERSION
+        - LSSTTS_XML_VERSION
+    depends_on:
+      - salidl
