@@ -10,7 +10,7 @@ LABEL name="LSST AuxTel Header Service Development Environment" \
     vendor="LSST" \
     license="GPLv3"
 
-RUN yum -y install make patch wget
+RUN yum -y install python36-devel gcc-c++ make patch wget
 
 # Versions
 ARG HEADERSERVICE_VERSION=1.0.0
@@ -21,7 +21,6 @@ ARG INSTALL_PATH=/opt/lsst
 ARG REPOS_TMP=/tmp/repos
 ARG HSUSER=headerservice
 
-RUN yum -y install python36-devel gcc-c++ make patch wget
 RUN pip3 install fitsio==$FITSIO_VERSION
 
 RUN yum install -y \
