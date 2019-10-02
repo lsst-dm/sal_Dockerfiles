@@ -1,38 +1,32 @@
 ARG LSSTTS_SAL_VERSION
 ARG LSSTTS_XML_VERSION
-FROM lsstdm/salidl:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}
-
-ARG LSSTTS_SAL_VERSION
-ARG LSSTTS_XML_VERSION
-ARG LSSTTS_RPM_VERSION=$LSSTTS_SAL_VERSION-$LSSTTS_XML_VERSION.el7
+ARG LSSTTS_SALOBJ_VERSION
+FROM lsstdm/salobj:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-${LSSTTS_SALOBJ_VERSION}
 
 LABEL name="LSST AuxTel Header Service Development Environment" \
     vendor="LSST" \
     license="GPLv3"
 
-RUN yum -y install python36-devel gcc-c++ make patch wget
+# These ARGS need to be re-declared
+ARG LSSTTS_SAL_VERSION
+ARG LSSTTS_XML_VERSION
+ARG LSSTTS_RPM_VERSION=$LSSTTS_SAL_VERSION-$LSSTTS_XML_VERSION.el7
 
 # Versions
-ARG HEADERSERVICE_VERSION=1.0.0
+ARG HEADERSERVICE_VERSION=1.0.1
 ARG SALPYTOOLS_VERSION=0.9.7
 ARG FITSIO_VERSION=1.0.4
-ARG GIT_LSST_DM="https://github.com/lsst-dm"
 ARG INSTALL_PATH=/opt/lsst
-ARG REPOS_TMP=/tmp/repos
 ARG HSUSER=headerservice
 
+# Pre-reqs for HeaderService
 RUN pip3 install fitsio==$FITSIO_VERSION
+RUN pip3 install astropy ipython pyyaml
 
-RUN yum install -y \
-    ATArchiver-$LSSTTS_RPM_VERSION \
-    ATHeaderService-$LSSTTS_RPM_VERSION \
-    ATCamera-$LSSTTS_RPM_VERSION \
-    EFD-$LSSTTS_RPM_VERSION \
-    ATPtg-$LSSTTS_RPM_VERSION \
-    ATMCS-$LSSTTS_RPM_VERSION \
-    ATSpectrograph-$LSSTTS_RPM_VERSION \
-    ATTCS-$LSSTTS_RPM_VERSION \
-    ATHexapod-$LSSTTS_RPM_VERSION
+# SAL rpms using $CCS_IDL_LIST
+ARG CCS_IDL_LIST
+RUN for ccs in $CCS_IDL_LIST ; do CCS_RPM_LIST=${CCS_RPM_LIST}" $ccs-$LSSTTS_RPM_VERSION"; done; \
+    yum install -y $CCS_RPM_LIST
 
 
 # --- Install HeaderService and salpytools ----
@@ -43,9 +37,9 @@ ARG PRODUCT_DIR=$INSTALL_PATH/$PRODUCT/$VERSION
 RUN echo "# This loads /opt/lsst/setup_SAL.env" > $INSTALL_PATH/setup_HeaderService.env \
     && echo "source $INSTALL_PATH/setup_salobj.env " >> $INSTALL_PATH/setup_HeaderService.env
 # Git clone and version checkout
-RUN mkdir -p $REPOS_TMP \
-    && cd $REPOS_TMP \
-    && git clone $GIT_LSST_DM/$PRODUCT.git -b $VERSION\
+RUN mkdir -p /tmp/repos \
+    && cd /tmp/repos \
+    && git clone https://github.com/lsst-dm/$PRODUCT.git -b $VERSION\
     && cd $PRODUCT \
     && mkdir -p $PRODUCT_DIR \
     && export PYTHONPATH=$PYTHONPATH:$PRODUCT_DIR/python \
@@ -58,9 +52,9 @@ ARG PRODUCT=salpytools
 ARG VERSION=$SALPYTOOLS_VERSION
 ARG PRODUCT_DIR=$INSTALL_PATH/$PRODUCT/$VERSION
 # Git clone and version checkout
-RUN mkdir -p $REPOS_TMP \
-    && cd $REPOS_TMP \
-    && git clone $GIT_LSST_DM/$PRODUCT.git -b $VERSION\
+RUN mkdir -p /tmp/repos \
+    && cd /tmp/repos \
+    && git clone https://github.com/lsst-dm/$PRODUCT.git -b $VERSION\
     && cd $PRODUCT \
     && mkdir -p $PRODUCT_DIR \
     && export PYTHONPATH=$PYTHONPATH:$PRODUCT_DIR/python \
