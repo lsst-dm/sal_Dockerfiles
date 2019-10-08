@@ -1,7 +1,7 @@
 ARG LSSTTS_SAL_VERSION
 ARG LSSTTS_XML_VERSION
 ARG LSSTTS_SALOBJ_VERSION
-FROM lsstdm/salobj:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-${LSSTTS_SALOBJ_VERSION}
+FROM lsstdm/salobj:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-salobj_${LSSTTS_SALOBJ_VERSION}
 
 LABEL name="LSST AuxTel Header Service Development Environment" \
     vendor="LSST" \
@@ -13,15 +13,13 @@ ARG LSSTTS_XML_VERSION
 ARG LSSTTS_RPM_VERSION=$LSSTTS_SAL_VERSION-$LSSTTS_XML_VERSION.el7
 
 # Versions
-ARG HEADERSERVICE_VERSION=1.0.1
-ARG SALPYTOOLS_VERSION=0.9.7
-ARG FITSIO_VERSION=1.0.4
+ARG HEADERSERVICE_VERSION
+ARG SALPYTOOLS_VERSION
 ARG INSTALL_PATH=/opt/lsst
 ARG HSUSER=headerservice
 
 # Pre-reqs for HeaderService
-RUN pip3 install fitsio==$FITSIO_VERSION
-RUN pip3 install astropy ipython pyyaml
+RUN pip3 install fitsio==1.0.4 astropy ipython pyyaml
 
 # SAL rpms using $CCS_IDL_LIST
 ARG CCS_IDL_LIST
@@ -63,6 +61,10 @@ RUN mkdir -p /tmp/repos \
 # Add to the init file
 RUN echo "source $PRODUCT_DIR/setpath.sh $PRODUCT_DIR" >> $INSTALL_PATH/setup_HeaderService.env
 RUN echo "export LSST_DDS_DOMAIN=auxtelpath" >> $INSTALL_PATH/setup_HeaderService.env
+
+# Clen up files
+RUN rm -rf /tmp/repos
+
 # --- End of HeaderService and salpytools ----
 
 # Add $HSUSER as user

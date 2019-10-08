@@ -1,7 +1,7 @@
 ARG OSPL_VERSION=6.9.0
-FROM lsstdm/salrun:${OSPL_VERSION} AS salidl-build
+FROM lsstdm/salrun:${OSPL_VERSION}
 
-LABEL name="LSST salsrc Development Environment" \
+LABEL name="LSST salsrc Runtime Environment" \
     vendor="LSST" \
     license="GPLv3"
 

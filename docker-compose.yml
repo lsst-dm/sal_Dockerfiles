@@ -63,6 +63,8 @@ services:
         - LSSTTS_XML_VERSION
         - LSSTTS_SALOBJ_VERSION
         - CCS_IDL_LIST
+        - HEADERSERVICE_VERSION
+        - SALPYTOOLS_VERSION
     depends_on:
       - salobj
 
