@@ -1,0 +1,17 @@
+ARG LSSTTS_SAL_VERSION
+ARG LSSTTS_XML_VERSION
+FROM lsstdm/salidl:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION} AS atarchiver-build
+
+ARG LSSTTS_SAL_VERSION
+ARG LSSTTS_XML_VERSION
+ARG LSSTTS_RPM_VERSION=${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}.el7
+
+LABEL name="LSST AuxTel Archiver Development Environment" \
+    vendor="LSST" \
+    license="GPLv3"
+
+RUN yum install -y \
+    ATArchiver-$LSSTTS_RPM_VERSION \
+    ATHeaderService-$LSSTTS_RPM_VERSION \
+    ATCamera-$LSSTTS_RPM_VERSION \
+    EFD-$LSSTTS_RPM_VERSION
