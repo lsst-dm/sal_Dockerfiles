@@ -65,3 +65,7 @@ ENV PYTHONPATH=/opt/lsst/ts_idl/python:$PYTHONPATH
 COPY --from=salidl-build /tmp/build/ts_idl/idl /opt/lsst/ts_idl/idl/
 COPY --from=salidl-build /tmp/build/ts_idl/python /opt/lsst/ts_idl/python/
 COPY --from=salidl-build /tmp/build/ts_idl/qos /opt/lsst/ts_idl/qos/
+
+RUN echo "source /opt/lsst/setup_SAL.env" > /opt/lsst/setup_salidl.env \
+  && echo "export TS_IDL_DIR=/opt/lsst/ts_idl" >> /opt/lsst/setup_salidl.env \
+  && echo "export PYTHONPATH=/opt/lsst/ts_idl/python:\${PYTHONPATH}" >> /opt/lsst/setup_salidl.env
