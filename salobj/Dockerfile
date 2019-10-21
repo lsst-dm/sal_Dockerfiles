@@ -17,3 +17,8 @@ RUN mkdir -p /opt/lsst \
 
 ENV TS_SALOBJ_DIR=/opt/lsst/ts_salobj
 ENV PYTHONPATH=${TS_SALOBJ_DIR}/python:$PYTHONPATH
+
+# Setup for salobj (i.e. PYTHONPATH)
+RUN cat /opt/lsst/setup_salidl.env > /opt/lsst/setup_salobj.env \
+  && echo "export TS_SALOBJ_DIR=/opt/lsst/ts_salobj" >> /opt/lsst/setup_salobj.env \
+  && echo "export PYTHONPATH=/opt/lsst/ts_salobj/python:\${PYTHONPATH}" >> /opt/lsst/setup_salobj.env
