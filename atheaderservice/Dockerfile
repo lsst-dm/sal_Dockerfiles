@@ -17,7 +17,6 @@ ARG LSSTTS_RPM_VERSION=$LSSTTS_SAL_VERSION-$LSSTTS_XML_VERSION.el7
 
 # Versions
 ARG HEADERSERVICE_VERSION
-ARG SALPYTOOLS_VERSION
 ARG HSUSER=headerservice
 
 # Pre-reqs for HeaderService
@@ -31,7 +30,7 @@ RUN for ccs in $CCS_IDL_LIST ; do CCS_RPM_LIST=${CCS_RPM_LIST}" $ccs-$LSSTTS_RPM
 # Copy the idl files from the rpms into the ts_idl folder
 RUN cp -pv /opt/lsst/ts_sal/idl/sal_revCoded_*.idl /opt/lsst/ts_idl/idl/
 
-# --- Install HeaderService and salpytools ----
+# --- Install HeaderService ----
 ARG PRODUCT=HeaderService
 ARG VERSION=$HEADERSERVICE_VERSION
 ARG PRODUCT_DIR=/opt/lsst/$PRODUCT/$VERSION
@@ -48,22 +47,6 @@ RUN mkdir -p /tmp/repos \
     && mkdir -p $PRODUCT_DIR \
     && export PYTHONPATH=$PYTHONPATH:$PRODUCT_DIR/python \
     && python3 setup.py install --prefix=$PRODUCT_DIR --install-lib=$PRODUCT_DIR/python
-# Add to the init file
-RUN echo "source $PRODUCT_DIR/setpath.sh $PRODUCT_DIR" >> /opt/lsst/setup_HeaderService.env
-
-# Install the salpytools
-ARG PRODUCT=salpytools
-ARG VERSION=$SALPYTOOLS_VERSION
-ARG PRODUCT_DIR=/opt/lsst/$PRODUCT/$VERSION
-# Git clone and version checkout
-RUN mkdir -p /tmp/repos \
-    && cd /tmp/repos \
-    && git clone https://github.com/lsst-dm/$PRODUCT.git -b $VERSION\
-    && cd $PRODUCT \
-    && mkdir -p $PRODUCT_DIR \
-    && export PYTHONPATH=$PYTHONPATH:$PRODUCT_DIR/python \
-    && python3 setup.py install --prefix=$PRODUCT_DIR --install-lib=$PRODUCT_DIR/python
-
 # Add to the init file
 RUN echo "source $PRODUCT_DIR/setpath.sh $PRODUCT_DIR" >> /opt/lsst/setup_HeaderService.env
 RUN echo "export LSST_DDS_DOMAIN=auxtelpath" >> /opt/lsst/setup_HeaderService.env
