@@ -14,13 +14,16 @@ LABEL name="LSST AuxTel Header Service Development Environment" \
 ARG LSSTTS_SAL_VERSION
 ARG LSSTTS_XML_VERSION
 ARG LSSTTS_RPM_VERSION=$LSSTTS_SAL_VERSION-$LSSTTS_XML_VERSION.el7
+ARG MINICONDA_PATH
 
 # Versions
 ARG HEADERSERVICE_VERSION
 ARG HSUSER=headerservice
 
 # Pre-reqs for HeaderService
-RUN pip3 install fitsio==1.0.4 astropy ipython pyyaml
+# Pre-reqs for the HeaderService
+RUN source ${MINICONDA_PATH}/bin/activate \
+    && conda install -y fitsio==1.0.4 astropy ipython pyyaml
 
 # SAL rpms using $CCS_IDL_LIST
 ARG CCS_IDL_LIST
@@ -40,7 +43,8 @@ RUN echo "# Load up ATHeaderService Environment" > /opt/lsst/setup_HeaderService
     && echo "export PYTHONPATH=\${PYTHONPATH}:/opt/lsst/ts_sal/lib " >> /opt/lsst/setup_HeaderService.env
 
 # Git clone and version checkout
-RUN mkdir -p /tmp/repos \
+RUN source ${MINICONDA_PATH}/bin/activate \
+    && mkdir -p /tmp/repos \
     && cd /tmp/repos \
     && git clone https://github.com/lsst-dm/$PRODUCT.git -b $VERSION\
     && cd $PRODUCT \
