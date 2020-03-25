@@ -11,7 +11,7 @@ version: "3.7"
 #export MINICONDA_PATH=/opt/miniconda3
 #export TAG=v${HEADERSERVICE_VERSION}_salobj_v${LSSTTS_SALOBJ_VERSION}_xml_v${LSSTTS_XML_VERSION}
 #export CCS_IDL_LIST="EFD ATHeaderService ATCamera ATArchiver ATPtg ATMCS ATSpectrograph ATTCS ATHexapod CCCamera CCHeaderService"
-#docker-compose build salrun salidl salobj atheaderservice
+#docker-compose build salrun salidl salobj headerservice
 
 
 services:
@@ -62,10 +62,10 @@ services:
       - salrun
 
 
-  atheaderservice:
-    image: lsstdm/atheaderservice:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-salobj_${LSSTTS_SALOBJ_VERSION}-aths_${HEADERSERVICE_VERSION}
+  headerservice:
+    image: lsstdm/headerservice:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-salobj_${LSSTTS_SALOBJ_VERSION}-aths_${HEADERSERVICE_VERSION}
     build:
-      context: ./atheaderservice
+      context: ./headerservice
       args:
         - LSSTTS_SAL_VERSION
         - LSSTTS_XML_VERSION
