@@ -24,7 +24,7 @@ RUN source $MINICONDA_PATH/bin/activate \
 
 # Pre-reqs for salobj/dds
 RUN source ${MINICONDA_PATH}/bin/activate \
-   && conda install -y pyyaml setuptools==41.0.1 jsonschema==3.0.1 Cython==0.29.12 boto3==1.11.14
+   && conda install -y pyyaml setuptools==41.0.1 jsonschema==3.0.1 Cython==0.29.12 boto3==1.11.14  moto=1.3.14
 
 COPY lsst-ts-nexus.repo /etc/yum.repos.d
 COPY setup_SAL.env /opt/lsst/setup_SAL.env

@@ -25,6 +25,7 @@ ARG HSUSER=headerservice
 RUN source ${MINICONDA_PATH}/bin/activate \
     && conda install -y fitsio==1.0.4 astropy ipython pyyaml
 
+RUN yum --enablerepo=lsst-ts clean metadata
 # SAL rpms using $CCS_IDL_LIST
 ARG CCS_IDL_LIST
 RUN for ccs in $CCS_IDL_LIST ; do CCS_RPM_LIST=${CCS_RPM_LIST}" $ccs-$LSSTTS_RPM_VERSION"; done; \
