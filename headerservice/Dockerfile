@@ -29,7 +29,7 @@ RUN yum --enablerepo=lsst-ts clean metadata
 # SAL rpms using $CCS_IDL_LIST
 ARG CCS_IDL_LIST
 RUN for ccs in $CCS_IDL_LIST ; do CCS_RPM_LIST=${CCS_RPM_LIST}" $ccs-$LSSTTS_RPM_VERSION"; done; \
-    yum install -y $CCS_RPM_LIST
+    yum install -y --enablerepo="lsst-ts-daily" $CCS_RPM_LIST
 
 # Copy the idl files from the rpms into the ts_idl folder
 RUN cp -pv /opt/lsst/ts_sal/idl/sal_revCoded_*.idl /opt/lsst/ts_idl/idl/
