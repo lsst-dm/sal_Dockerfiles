@@ -11,17 +11,4 @@ ARG LSSTTS_SALOBJ_VERSION
 ARG MINICONDA_PATH
 
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && mkdir -p /opt/lsst \
-    && cd /opt/lsst  \
-    && git clone https://github.com/lsst-ts/ts_salobj.git \
-    && cd ts_salobj \
-    && git checkout v$LSSTTS_SALOBJ_VERSION \
-    && pip install -e .
-
-ENV TS_SALOBJ_DIR=/opt/lsst/ts_salobj
-ENV PYTHONPATH=${TS_SALOBJ_DIR}/python:$PYTHONPATH
-
-# Setup for salobj (i.e. PYTHONPATH)
-RUN cat /opt/lsst/setup_salidl.env > /opt/lsst/setup_salobj.env \
-  && echo "export TS_SALOBJ_DIR=/opt/lsst/ts_salobj" >> /opt/lsst/setup_salobj.env \
-  && echo "export PYTHONPATH=/opt/lsst/ts_salobj/python:\${PYTHONPATH}" >> /opt/lsst/setup_salobj.env
+    && conda install -c lsstts python=3.7 ts-salobj=${LSSTTS_SALOBJ_VERSION}

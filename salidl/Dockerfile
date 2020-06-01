@@ -5,18 +5,18 @@ LABEL name="LSST SAL IDL" \
     license="GPLv3"
 
 ARG LSSTTS_IDL_VERSION
+ARG LSSTTS_XML_VERSION
 ARG MINICONDA_PATH
 
-WORKDIR /opt/lsst
-RUN git clone https://github.com/lsst-ts/ts_idl.git \
-    && cd ts_idl \
-    && git checkout v$LSSTTS_IDL_VERSION
+# This will install all of the sal_revCoded_*.idl files in $MINICONDA_PATH/lib/python3.7/idl
+RUN source ${MINICONDA_PATH}/bin/activate \
+    && conda install -c lsstts python=3.7 ts-idl=${LSSTTS_IDL_VERSION}_${LSSTTS_XML_VERSION}
 
-ENV TS_IDL_DIR=/opt/lsst/ts_idl
-ENV PYTHONPATH=/opt/lsst/ts_idl/python:$PYTHONPATH
-ENV MINICONDA=${MINICONDA_PATH}
+#ENV TS_IDL_DIR=/opt/lsst/ts_idl
+#ENV PYTHONPATH=/opt/lsst/ts_idl/python:$PYTHONPATH
+#ENV MINICONDA=${MINICONDA_PATH}
 
-RUN echo "source /opt/lsst/setup_SAL.env" > /opt/lsst/setup_salidl.env \
-  && echo "source ${MINICONDA}/bin/activate" >> /opt/lsst/setup_salidl.env \
-  && echo "export TS_IDL_DIR=/opt/lsst/ts_idl" >> /opt/lsst/setup_salidl.env \
-  && echo "export PYTHONPATH=/opt/lsst/ts_idl/python:\${PYTHONPATH}" >> /opt/lsst/setup_salidl.env
+#RUN echo "source /opt/lsst/setup_SAL.env" > /opt/lsst/setup_salidl.env \
+#  && echo "source ${MINICONDA}/bin/activate" >> /opt/lsst/setup_salidl.env \
+#  && echo "export TS_IDL_DIR=/opt/lsst/ts_idl" >> /opt/lsst/setup_salidl.env \
+#  && echo "export PYTHONPATH=/opt/lsst/ts_idl/python:\${PYTHONPATH}" >> /opt/lsst/setup_salidl.env

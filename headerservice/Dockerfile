@@ -21,27 +21,14 @@ ARG HEADERSERVICE_VERSION
 ARG HSUSER=headerservice
 
 # Pre-reqs for HeaderService
-# Pre-reqs for the HeaderService
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -y fitsio==1.0.4 astropy ipython pyyaml
-
-RUN yum --enablerepo=lsst-ts clean metadata
-# SAL rpms using $CCS_IDL_LIST
-ARG CCS_IDL_LIST
-RUN for ccs in $CCS_IDL_LIST ; do CCS_RPM_LIST=${CCS_RPM_LIST}" $ccs-$LSSTTS_RPM_VERSION"; done; \
-    yum install -y --enablerepo="lsst-ts-daily" $CCS_RPM_LIST
-
-# Copy the idl files from the rpms into the ts_idl folder
-RUN cp -pv /opt/lsst/ts_sal/idl/sal_revCoded_*.idl /opt/lsst/ts_idl/idl/
+    && conda install -y fitsio==1.0.4 ipython pyyaml
 
 # --- Install HeaderService ----
 ARG PRODUCT=HeaderService
 ARG VERSION=$HEADERSERVICE_VERSION
 ARG PRODUCT_DIR=/opt/lsst/$PRODUCT/$VERSION
-# Create the init env file
-RUN echo "# Load up ATHeaderService Environment" > /opt/lsst/setup_HeaderService.env \
-    && echo "source /opt/lsst/setup_salobj.env " >> /opt/lsst/setup_HeaderService.env \
-    && echo "export PYTHONPATH=\${PYTHONPATH}:/opt/lsst/ts_sal/lib " >> /opt/lsst/setup_HeaderService.env
+ENV MINICONDA=${MINICONDA_PATH}
 
 # Git clone and version checkout
 RUN source ${MINICONDA_PATH}/bin/activate \
@@ -52,9 +39,12 @@ RUN source ${MINICONDA_PATH}/bin/activate \
     && mkdir -p $PRODUCT_DIR \
     && export PYTHONPATH=$PYTHONPATH:$PRODUCT_DIR/python \
     && python3 setup.py install --prefix=$PRODUCT_DIR --install-lib=$PRODUCT_DIR/python
-# Add to the init file
-RUN echo "source $PRODUCT_DIR/setpath.sh $PRODUCT_DIR" >> /opt/lsst/setup_HeaderService.env
-RUN echo "export LSST_DDS_DOMAIN=auxtelpath" >> /opt/lsst/setup_HeaderService.env
+
+# Create init file
+RUN echo "# Load up HeaderService Environment" > /opt/lsst/setup_HeaderService.env \
+   && echo "source /opt/lsst/setup_SAL.env" >> /opt/lsst/setup_HeaderService.env \
+   && echo "source ${MINICONDA}/bin/activate" >> /opt/lsst/setup_HeaderService.env \
+   && echo "source $PRODUCT_DIR/setpath.sh $PRODUCT_DIR" >> /opt/lsst/setup_HeaderService.env
 
 # Clen up files
 RUN rm -rf /tmp/repos
@@ -72,5 +62,5 @@ ENV SHELL /bin/bash
 USER $HSUSER
 WORKDIR /home/$HSUSER
 
-CMD source /opt/lsst/setup_HeaderService.env \
-    && ATHS_salobj -c $HEADERSERVICE_DIR/etc/conf/atTelemetry.yaml --send_efd_message
+#CMD source /opt/lsst/setup_HeaderService.env \
+#    && ATHS_salobj -c $HEADERSERVICE_DIR/etc/conf/atTelemetry.yaml
