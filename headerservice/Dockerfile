@@ -22,13 +22,14 @@ ARG HSUSER=headerservice
 
 # Pre-reqs for HeaderService
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -y fitsio==1.0.4 ipython pyyaml
+    && conda install -y fitsio==1.0.4 pyyaml
 
 # --- Install HeaderService ----
 ARG PRODUCT=HeaderService
 ARG VERSION=$HEADERSERVICE_VERSION
 ARG PRODUCT_DIR=/opt/lsst/$PRODUCT/$VERSION
 ENV MINICONDA=${MINICONDA_PATH}
+
 
 # Git clone and version checkout
 RUN source ${MINICONDA_PATH}/bin/activate \
