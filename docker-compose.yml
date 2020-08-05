@@ -21,6 +21,8 @@ services:
       context: ./salrun
       args:
         - OSPL_VERSION
+        - OSPL_RPM_VERSION
+        - LSSTTS_DDS_VERSION
         - MINICONDA_PATH
 
   salidl:

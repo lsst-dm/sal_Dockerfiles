@@ -13,11 +13,13 @@ RUN yum -y install python36 python36-devel python36-pip \
 
 # Need to install the rpm for OpenSplice
 ARG OSPL_VERSION=6.9.0
+ARG OSPL_RPM_VERSION=6.9.0-8
+ARG LSSTTS_DDS_VERSION=6.9.190925_7
 
 COPY lsst-ts-nexus.repo /etc/yum.repos.d
 COPY setup_SAL.env /opt/lsst/setup_SAL.env
 
-RUN yum -y install OpenSpliceDDS-$OSPL_VERSION
+RUN yum -y install OpenSpliceDDS-$OSPL_RPM_VERSION
 ENV OSPL_HOME /opt/OpenSpliceDDS/V${OSPL_VERSION}/HDE/x86_64.linux
 
 # Conda installation, for Py37 and beyond
@@ -33,4 +35,4 @@ RUN source $MINICONDA_PATH/bin/activate \
 
 # Install python dds using conda
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -c lsstts python=3.7 ts-dds==v$OSPL_VERSION
+    && conda install -c lsstts python=3.7 ts-dds==v$LSSTTS_DDS_VERSION
