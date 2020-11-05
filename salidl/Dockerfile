@@ -11,7 +11,7 @@ ARG MINICONDA_PATH
 
 # This will install all of the sal_revCoded_*.idl files in $MINICONDA_PATH/lib/python3.7/idl
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -c lsstts python=3.7 ts-idl=${LSSTTS_IDL_VERSION}_${LSSTTS_XML_VERSION}_${LSSTTS_SAL_VERSION}
+    && conda install -c lsstts -c lsstts/label/dev python=3.7 ts-idl=${LSSTTS_IDL_VERSION}_${LSSTTS_XML_VERSION}_${LSSTTS_SAL_VERSION}
 
 #ENV TS_IDL_DIR=/opt/lsst/ts_idl
 #ENV PYTHONPATH=/opt/lsst/ts_idl/python:$PYTHONPATH

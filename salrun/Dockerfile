@@ -15,16 +15,15 @@ RUN yum -y install python36 python36-devel python36-pip \
 ARG OSPL_VERSION=6.9.0
 ARG OSPL_RPM_VERSION=6.9.0-8
 ARG LSSTTS_DDS_VERSION=6.9.190925_7
+ARG LSSTTS_DDSCONFIG_VERSION=v0.1.0
 
 COPY lsst-ts-nexus.repo /etc/yum.repos.d
-COPY setup_SAL.env /opt/lsst/setup_SAL.env
-
+COPY setup_SAL.env /opt/lsst/setup_SAL.env.template
 
 ARG NEXUS_USER
 ARG NEXUS_PASS
 ENV NEXUS_USER=${NEXUS_USER}
 ENV NEXUS_PASS=${NEXUS_PASS}
-
 
 COPY lsst-ts-nexus-private-template.repo .
 RUN envsubst < lsst-ts-nexus-private-template.repo > /etc/yum.repos.d/lsst-ts-nexus-private.repo
@@ -34,6 +33,17 @@ ENV OSPL_HOME /opt/OpenSpliceDDS/V${OSPL_VERSION}/HDE/x86_64.linux
 
 # Now we remove the repo file with password
 RUN rm /etc/yum.repos.d/lsst-ts-nexus-private.repo
+
+# Install the OSPL configuration
+RUN cd /opt/lsst \
+    && git clone https://github.com/lsst-ts/ts_ddsconfig --branch ${LSSTTS_DDSCONFIG_VERSION}
+
+# Get the setup conf
+RUN echo "export OSPL_HOME=/opt/OpenSpliceDDS/V${OSPL_VERSION}/HDE/x86_64.linux" > /opt/lsst/setup_SAL.env \
+    && echo "export OSPL_URI=file:///opt/lsst/ts_ddsconfig/config/ospl-shmem.xml" >> /opt/lsst/setup_SAL.env \
+    && cat /opt/lsst/setup_SAL.env.template >> /opt/lsst/setup_SAL.env 
+
+ENV OSPL_URI file:///opt/lsst/ts_ddsconfig/config/ospl-shmem.xml
 
 # Conda installation
 RUN mkdir -p ${MINICONDA_PATH} \

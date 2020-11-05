@@ -23,6 +23,7 @@ services:
         - OSPL_VERSION
         - OSPL_RPM_VERSION
         - LSSTTS_DDS_VERSION
+        - LSSTTS_DDSCONFIG_VERSION
         - MINICONDA_PATH
         - NEXUS_USER
         - NEXUS_PASS
