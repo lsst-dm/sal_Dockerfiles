@@ -16,7 +16,8 @@ version: "3.7"
 
 services:
   salrun:
-    image: lsstdm/salrun:${OSPL_VERSION}
+    image: lsstdm/salrun:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-salobj_${LSSTTS_SALOBJ_VERSION}
+
     build:
       context: ./salrun
       args:
@@ -27,6 +28,9 @@ services:
         - MINICONDA_PATH
         - NEXUS_USER
         - NEXUS_PASS
+        - LSSTTS_IDL_VERSION
+        - LSSTTS_SAL_VERSION
+        - LSSTTS_XML_VERSION
 
   salidl:
     image: lsstdm/salidl:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}

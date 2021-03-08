@@ -11,4 +11,4 @@ ARG LSSTTS_SALOBJ_VERSION
 ARG MINICONDA_PATH
 
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -c lsstts python=3.7 ts-salobj=${LSSTTS_SALOBJ_VERSION}
+    && conda install -c lsstts python=3.8 ts-salobj=${LSSTTS_SALOBJ_VERSION}
