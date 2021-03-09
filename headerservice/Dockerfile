@@ -4,7 +4,7 @@
 ARG LSSTTS_SAL_VERSION
 ARG LSSTTS_XML_VERSION
 ARG LSSTTS_SALOBJ_VERSION
-FROM lsstdm/salobj:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-salobj_${LSSTTS_SALOBJ_VERSION}
+FROM lsstdm/salrun:${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-salobj_${LSSTTS_SALOBJ_VERSION}
 
 LABEL name="LSST AuxTel Header Service Development Environment" \
     vendor="LSST" \
@@ -22,7 +22,7 @@ ARG HSUSER=headerservice
 
 # Pre-reqs for HeaderService
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -y fitsio==1.0.4 pyyaml
+    && conda install -y python=3.8 fitsio pyyaml
 
 # --- Install HeaderService ----
 ARG PRODUCT=HeaderService
@@ -39,7 +39,7 @@ RUN source ${MINICONDA_PATH}/bin/activate \
     && cd $PRODUCT \
     && mkdir -p $PRODUCT_DIR \
     && export PYTHONPATH=$PYTHONPATH:$PRODUCT_DIR/python \
-    && python3 setup.py install --prefix=$PRODUCT_DIR --install-lib=$PRODUCT_DIR/python
+    && python setup.py install --prefix=$PRODUCT_DIR --install-lib=$PRODUCT_DIR/python
 
 # Create init file
 RUN echo "# Load up HeaderService Environment" > /opt/lsst/setup_HeaderService.env \
