@@ -1,11 +1,11 @@
-export OSPL_VERSION=6.10.4
-export OSPL_RPM_VERSION=6.10.4-6.el7
-export LSSTTS_DDS_VERSION=6.10.4
+export OSPL_VERSION=6.11.0
+export OSPL_RPM_VERSION=6.11.0-16.el7
+export LSSTTS_DDS_VERSION=6.11.0
 export LSSTTS_SAL_VERSION=5.1.1
-export LSSTTS_XML_VERSION=8.0.0
-export LSSTTS_SALOBJ_VERSION=6.3.0
-export LSSTTS_IDL_VERSION=3.1.1
-export LSSTTS_DDSCONFIG_VERSION=0.5.1
+export LSSTTS_XML_VERSION=9.0.0
+export LSSTTS_SALOBJ_VERSION=6.3.5
+export LSSTTS_IDL_VERSION=3.1.2
+export LSSTTS_DDSCONFIG_VERSION=0.6.1
 export LSSTTS_IDL_CONDA_VERSION=${LSSTTS_IDL_VERSION}_${LSSTTS_XML_VERSION}_${LSSTTS_SAL_VERSION}
 export HEADERSERVICE_VERSION=2.9.0
 export MINICONDA_PATH=/opt/miniconda3
@@ -14,7 +14,7 @@ export TAG_TS=v${HEADERSERVICE_VERSION}_salobj_v${LSSTTS_SALOBJ_VERSION}_idl_v${
 export TAG_DM=${LSSTTS_SAL_VERSION}-${LSSTTS_XML_VERSION}-salobj_${LSSTTS_SALOBJ_VERSION}-hs_${HEADERSERVICE_VERSION}
 export TAG=v${HEADERSERVICE_VERSION}_salobj_v${LSSTTS_SALOBJ_VERSION}_xml_v${LSSTTS_XML_VERSION}
 #docker-compose  build --no-cache salrun salidl salobj headerservice
-docker-compose  build salrun headerservice
+docker-compose build salrun headerservice
 
 echo "Re-taggins as:"
 echo "               ts-dockerhub.lsst.org/headerservice:dm-${TAG_TS}"
