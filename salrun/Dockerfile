@@ -61,7 +61,7 @@ RUN source $MINICONDA_PATH/bin/activate \
 
 # Install python ts-dds/ts-idl and ts-salobj using conda
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -y cython \
+    && conda install -y astropy=4.1 \
     && conda install -y -c lsstts -c lsstts/label/dev python=3.8 ts-dds=$LSSTTS_DDS_VERSION \
     && conda install -y -c lsstts -c lsstts/label/dev python=3.8 ts-idl=${LSSTTS_IDL_VERSION}_${LSSTTS_XML_VERSION}_${LSSTTS_SAL_VERSION} \
     && conda install -y -c lsstts -c lsstts/label/dev python=3.8 ts-salobj=${LSSTTS_SALOBJ_VERSION}
