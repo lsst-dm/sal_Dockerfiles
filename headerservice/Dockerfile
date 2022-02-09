@@ -22,7 +22,9 @@ ARG HSUSER=headerservice
 
 # Pre-reqs for HeaderService
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -y python=3.8 fitsio pyyaml
+    && conda install -y python=3.8 fitsio pyyaml \
+    # Need to downgrade to setuptools=59.8.0
+    && conda install -y setuptools=59.8.0
 
 # --- Install HeaderService ----
 ARG PRODUCT=HeaderService
@@ -39,11 +41,7 @@ RUN source ${MINICONDA_PATH}/bin/activate \
     && cd $PRODUCT \
     && mkdir -p $PRODUCT_DIR \
     && export PYTHONPATH=$PYTHONPATH:$PRODUCT_DIR/python \
-    && python setup.py install --prefix=$PRODUCT_DIR --install-lib=$PRODUCT_DIR/python \
-    # Hack to copy data files, setup.py is installing it in bdist instead
-    && mkdir -p $CONDA_PREFIX/HeaderService/etc \
-    && cp -pvr etc/LATISS etc/ComCam etc/TestCamera/E2V etc/TestCamera/ITL etc/conf $CONDA_PREFIX/HeaderService/etc \
-    && cp -pvr setpath.sh $CONDA_PREFIX/HeaderService
+    && python setup.py install --prefix=$PRODUCT_DIR --install-lib=$PRODUCT_DIR/python
 
 # Create init file
 RUN echo "# Load up HeaderService Environment" > /opt/lsst/setup_HeaderService.env \
