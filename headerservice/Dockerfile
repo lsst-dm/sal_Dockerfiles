@@ -22,7 +22,9 @@ ARG HSUSER=headerservice
 
 # Pre-reqs for HeaderService
 RUN source ${MINICONDA_PATH}/bin/activate \
-    && conda install -y python=3.8 fitsio pyyaml
+    && conda install -y python=3.8 fitsio pyyaml \
+    # Need to downgrade to setuptools=59.8.0
+    && conda install -y setuptools=59.8.0
 
 # --- Install HeaderService ----
 ARG PRODUCT=HeaderService
